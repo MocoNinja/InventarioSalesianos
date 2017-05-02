@@ -1,0 +1,629 @@
+{% import "headers.twig" as headers %}
+{% import "paneles.twig" as paneles %}
+{% import "mapa.twig" as mapa %}
+{% import "menu.twig" as menu %}
+
+<!DOCTYPE html>
+<html>
+{{ headers.getheaders("Etno") }}
+
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+
+<body class="container-fluid">
+<div class="row" id="eventos-screen">
+    {{ menu.getmenu("evento",usuario,capabilities,data,numincidencias,fiesta) }}
+    <div class="col-sm-9 col-md-10 main ">
+        <div id="anima1">
+            <div class="panel panel-default mensaje-multiple">
+                <div class="panel-heading panel-heading-noblock row">
+                    <div class="col-xs-12 col-sm-6">
+                        <h4><span class="ionicons ion-map"></span> {{ fiesta|capitalize }}s </h4>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6">
+
+                        <a id="boton_masnuevo" type="button"
+                           class="btn btn-lg btn-ionic-green tab-button float-right closepanel1">+ Nuevo
+                        </a>
+
+                        <a id="boton_categoria" type="button"
+                           class="btn btn-lg btn-primary tab-button float-right closepanel2">Categorías
+                        </a>
+
+
+                        {% if hasComarca %}
+
+                            <a id="boton_categoria" class="btn btn-lg tab-button btn-primary float-right closepanel3" role="button"
+                               data-toggle="collapse" href="#collapseBtn-3" aria-expanded="false"
+                               aria-controls="collapseBtn-3">Pueblos</a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Empieza Formulario de Categoría -->
+
+                    <div class="col-xs-12 " style="">
+                        <div id="collapseBtn-cat" class="panel-collapse collapse no-margin always-margin" aria-expanded="false">
+                            <div class="panel-body bordered p-15">
+                                <div id="anima1">
+                                    <div class="col-lg-12" id="cat_listg">
+                                        <a class="boton-evento" data-toggle="collapse" data-parent="#accordion-2"
+                                           href="#collapseBtn-cat"><label id="label_bando2" for="description">Cerrar
+                                                [x]</label></a>
+                                        {% for category in categories %}
+                                            <p class="cat_list">
+                                                {#<img  src="http://staticpanelfiestas.devecomputer.es/category/{{ category.userId }}/{{ category.id }}.{{ category.fileType }}"
+                                                            class="img-responsive img-inline-margin-right">{{ category.category }}#}
+                                                <img  src="{{ path }}files/category/{{ category.userId }}/{{ category.id }}.{{ category.fileType }}?t={{ date().timestamp }}"
+                                                      class=" img-inline-margin-right">{{ category.category }}
+                                                {% if category.active %}
+                                                    <a href="/eventos/category/edit/{{ category.id }}/" class="btn btn-sm btn-primary float-right  btn-margin-top-2">Editar</a>
+                                                {% else %}
+                                                    <a href="/eventos/category/active/{{ category.id }}/" class="btn btn-sm btn-info float-right  btn-margin-top-2">Activar</a>
+                                                {% endif %}
+                                            </p>
+                                        {% endfor %}
+
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <form role="form" action="/eventos/category/" name="category_form" id="category_form" method="post" {{ form_enctype(category_form) }}>
+                                            {#AQUI van las tabs con los idiomas#}
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                {% for idioma in idiomas %}
+                                                    <li role="presentation" {% if loop.index == 1 %} class="active"{% endif %}><a class="customHover" href="#{{ idioma.idioma|slice(0,2)|upper }}{{ loop.index }}" aria-controls="{{ idioma.idioma|slice(0,2)|upper }}{{ loop.index }}" role="tab" data-toggle="tab">{{ idioma.idioma|slice(0,2)|upper }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="tab-content">
+                                                {% for idioma in idiomas %}
+                                                    <div role="tabpanel" class="tab-pane fade {% if loop.index == 1 %}in active{% endif %}" id="{{ idioma.idioma|slice(0,2)|upper }}{{ loop.index }}">
+                                                        <br>
+                                                        {{ form_label(attribute(category_form, "category_"~idioma.idIdioma)) }}
+                                                        {{ form_errors(attribute(category_form, "category_"~idioma.idIdioma)) }}
+                                                        {{ form_widget(attribute(category_form, "category_"~idioma.idIdioma)) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <br>
+                                            {{ form_label(category_form.icon) }}
+                                            {{ form_errors(category_form.icon) }}
+                                            {{ form_widget(category_form.icon) }}
+                                            <label id="form_icon-error" class="error" for="form_icon"></label>
+
+                                            {{ form_widget(category_form._token) }}
+                                            <br>
+                                            <button type="submit" class="btn btn-lg btn-ionic-green float-right">Guardar</button>
+                                            {#<button data-toggle="collapse" data-parent="#accordion-2" href="#collapseBtn-cat" type="button" class="btn btn-lg btn-primary float-right boton-evento btn-importante">Guardar</button>#}
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Termina Formulario de Categoría -->
+                    <!-- Empieza el formulario de pueblos -->
+                    {% if hasComarca and not is_granted('ROLE_SUBUSER')%}
+                        <div class="col-xs-12" style="">
+                            <div id="collapseBtn-3" class="panel-collapse collapse no-margin always-margin" aria-expanded="false">
+                                <div class="panel-body bordered p-15">
+                                    <div id="anima1">
+                                        <div class="col-xs-12" id="cat_listg">
+                                            <a class="boton-evento" data-toggle="collapse" data-parent="#accordion-2"
+                                               href="#collapseBtn-3"><label id="label_bando2" for="description">Cerrar
+                                                    [x]</label></a>
+                                            <br>
+                                            {% for pueblo in pueblos %}
+                                                <p class="cat_list">{{ pueblo.name }}
+                                                    {% if pueblo.active %}
+                                                        <a href="/eventos/village/edit/{{ pueblo.id }}/" class="btn btn-xs btn-primary float-right">Editar</a>
+                                                    {% else %}
+                                                        <a href="/eventos/village/active/{{ pueblo.id }}/" class="btn btn-xs btn-info float-right">Activar</a>
+                                                    {% endif %}
+                                                </p>
+                                            {% endfor %}
+
+                                        </div>
+                                        <br>
+                                        <div class="col-xs-12">
+
+                                            <form role="form" action="/eventos/village/" name="villageForm" id="villageForm" method="post">
+                                                {{ form_label(villageForm.name) }}
+                                                {{ form_errors(villageForm.name) }}
+                                                {{ form_widget(villageForm.name) }}
+                                                <br>
+                                                {{ form_widget(villageForm._token) }}
+                                                <button type="submit" class="btn btn-lg btn-ionic-green float-right">Guardar</button>
+                                                {#<button data-toggle="collapse" data-parent="#accordion-2" href="#collapseBtn-cat" type="button" class="btn btn-lg btn-primary float-right boton-evento btn-importante">Guardar</button>#}
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <!-- Termina el formulario de pueblos
+
+                    <!-- Empieza Formulario de +Nuevo -->
+
+                    <div class="col-xs-12" style="float: right">
+
+                        <div id="collapseBtn-2" class="panel-collapse collapse no-margin" aria-expanded="false">
+                            <div class="panel-body bordered p-15">
+                                <div id="anima1">
+                                    <p><a class="boton-evento" id="boton-evento" data-toggle="collapse" data-parent="#accordion-2" href="#collapseBtn-2">
+                                            <label id="label_bando2" for="description">Cerrar[x]</label>
+                                        </a>
+                                    </p>
+                                    <form role="form" action="/eventos/nuevo/" name="event_form" id="event_form" method="post" {{ form_enctype(event_form) }}>
+                                        {#AQUI van las tabs con los idiomas#}
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            {% for idioma in idiomas %}
+                                                <li role="presentation" {% if loop.index == 1 %} class="active"{% endif %}><a class="customHover" href="#{{ idioma.idioma|slice(0,2)|upper }}" aria-controls="{{ idioma.idioma|slice(0,2)|upper }}" role="tab" data-toggle="tab">{{ idioma.idioma|slice(0,2)|upper }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="tab-content">
+                                            {% for idioma in idiomas %}
+                                                <div role="tabpanel" class="tab-pane fade {% if loop.index == 1 %}in active{% endif %}" id="{{ idioma.idioma|slice(0,2)|upper }}">
+                                                    <br>
+                                                    {{ form_label(attribute(event_form, "titulo_"~idioma.idIdioma)) }}
+                                                    {{ form_errors(attribute(event_form, "titulo_"~idioma.idIdioma)) }}
+                                                    {{ form_widget(attribute(event_form, "titulo_"~idioma.idIdioma)) }}
+                                                    <br>
+                                                    {{ form_label(attribute(event_form, "descripcion_"~idioma.idIdioma)) }}
+                                                    {{ form_errors(attribute(event_form, "descripcion_"~idioma.idIdioma)) }}
+                                                    {{ form_widget(attribute(event_form, "descripcion_"~idioma.idIdioma)) }}
+                                                    <br>
+                                                    {{ form_label(attribute(event_form, "organizacion_"~idioma.idIdioma)) }}
+                                                    {{ form_errors(attribute(event_form, "organizacion_"~idioma.idIdioma)) }}
+                                                    {{ form_widget(attribute(event_form, "organizacion_"~idioma.idIdioma)) }}
+                                                    <br>
+                                                    {{ form_label(attribute(event_form, "lugar_"~idioma.idIdioma)) }}
+                                                    {{ form_errors(attribute(event_form, "lugar_"~idioma.idIdioma)) }}
+                                                    {{ form_widget(attribute(event_form, "lugar_"~idioma.idIdioma)) }}
+                                                    <br>
+                                                    {{ form_label(attribute(event_form, "url_"~idioma.idIdioma)) }}
+                                                    {{ form_errors(attribute(event_form, "url_"~idioma.idIdioma)) }}
+                                                    {{ form_widget(attribute(event_form, "url_"~idioma.idIdioma)) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <br>
+                                        {{ form_label(event_form.link) }}
+                                        {{ form_errors(event_form.link) }}
+                                        {{ form_widget(event_form.link) }}
+                                        <br>
+                                        {{ form_label(event_form.programaFiestas) }}
+                                        {{ form_errors(event_form.programaFiestas) }}
+                                        {{ form_widget(event_form.programaFiestas) }}
+                                        <br>
+                                        <br>
+                                        {% if capabilities.subscribe %}
+                                            {{ form_label(event_form.subscribe) }}
+                                            {{ form_errors(event_form.subscribe) }}
+                                            {{ form_widget(event_form.subscribe) }}
+                                            <br>
+                                            <br>
+                                        {% endif %}
+                                        {% if hasComarca %}
+                                            {{ form_label(event_form.pueblos) }}
+                                            {{ form_errors(event_form.pueblos) }}
+                                            {{ form_widget(event_form.pueblos) }}
+                                            <br>
+                                        {% endif %}
+                                        {{ form_label(event_form.fechaInicial) }}
+                                        {{ form_widget(event_form.fechaInicial) }}
+                                        <label id="form_fechaInicial_date-error" class="error" for="form_fechaInicial_date"></label>
+                                        <label id="form_fechaInicial_time-error" class="error" for="form_fechaInicial_time"></label>
+                                        <br>
+                                        {{ form_label(event_form.fechaFinal) }}
+                                        <p class="text-muted">*Opcional</p>
+                                        {{ form_widget(event_form.fechaFinal) }}
+                                        <label id="form_fechaFinal_date-error" class="error" for="form_fechaFinal_date"></label>
+                                        <label id="form_fechaFinal_time-error" class="error" for="form_fechaFinal_time"></label>
+                                        <br>
+                                        {{ form_label(event_form.fechaPublicacion) }}
+                                        <p class="text-muted">*Esta opción no es obligatoria, si no desea programar la publicación del evento dejela sin rellenar y el evento se publicará en el acto.</p>
+                                        {{ form_widget(event_form.fechaPublicacion) }}
+                                        <label id="form_fechaPublicacion_date-error" class="error" for="form_fechaPublicacion_date"></label>
+                                        <label id="form_fechaPublicacion_time-error" class="error" for="form_fechaPublicacion_time"></label>
+                                        <br>
+                                        {{ form_label(event_form.categories) }}
+                                        {{ form_errors(event_form.categories) }}
+                                        {{ form_widget(event_form.categories) }}
+                                        <br>
+                                        <p class="text-muted">*Pulse sobre el mapa para guardar la latitud y la longitud.</p>
+                                        <div id="googleMap"></div>
+                                        <br>
+                                        {{ form_label(event_form.latitud) }}
+                                        {{ form_errors(event_form.latitud) }}
+                                        {{ form_widget(event_form.latitud) }}
+                                        <br>
+                                        {{ form_label(event_form.longitud) }}
+                                        {{ form_errors(event_form.longitud) }}
+                                        {{ form_widget(event_form.longitud) }}
+                                        <br>
+                                        {{ form_label(event_form.foto_principal) }}
+                                        {{ form_errors(event_form.foto_principal) }}
+                                        {{ form_widget(event_form.foto_principal) }}
+                                        <label id="form_foto_principal-error" class="error"
+                                               for="form_foto_principal"></label>
+                                        <br>
+                                        {{ form_label(event_form.foto_miniatura) }}
+                                        {{ form_errors(event_form.foto_miniatura) }}
+                                        {{ form_widget(event_form.foto_miniatura) }}
+                                        <label id="form_foto_miniatura-error" class="error"
+                                               for="form_foto_miniatura"></label>
+                                        <br>
+                                        {{ form_label(event_form.copias) }}
+                                        <p class="text-muted">Si desea crear más de un evento, cambie esta casilla. Si solo quiere crear una evento no la cambie. </p>
+                                        {{ form_errors(event_form.copias) }}
+                                        {{ form_widget(event_form.copias) }}
+
+                                        {{ form_widget(event_form._token) }}
+                                        <br>
+                                        <button type="submit" class="btn btn-lg btn-ionic-green float-right">Publicar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Termina Formulario de +Nuevo -->
+
+                </div>
+                <!-- Cuerpo de la secicón -->
+                <div class="panel-body">
+                    {% if events|length > 0 %}
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-3 margin-top-1 padding-left-7px text-right margin-left-accion-lote">
+                                <form class="form-inline" role="form" action="/eventos/accionesLote/" name="accionesLote_form" id="accionesLote_form">
+                                    {{ form_label(accionesLote_form.accionesLote) }}
+                                    {{ form_errors(accionesLote_form.accionesLote) }}
+                                    {{ form_widget(accionesLote_form.accionesLote) }}
+                                    <button type="submit" id="btn-accionesLote" class="btn btn-primary btn-ms">Ok</button>
+                                </form>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-9  padding-left-0 text-right margin-left--3-menu">
+                                <form class="form-inline" role="form" action="/eventos/search/" name="search_form" id="search_form">
+                                    {{ form_label(search_form.search1) }}
+                                    {{ form_errors(search_form.search1) }}
+                                    {{ form_widget(search_form.search1) }}
+
+                                    {{ form_label(search_form.search2) }}
+                                    {{ form_errors(search_form.search2) }}
+                                    {{ form_widget(search_form.search2) }}
+
+                                    <button type="submit" id="btn-search2" class="btn btn-md btn-primary">Buscar</button>
+                                </form>
+                            </div>
+                            {# <div class="col-xs-3 col-md-3">
+                                 <div class="leyenda">
+                                     <div><span class="color-blue-leyenda"> </span>Evento fuera de fecha</div>
+                                     <div><span class="color-red-leyenda"> </span>Evento desactivado</div>
+                                 </div>
+                             </div>#}
+
+                        </div>
+                    {% endif %}
+
+                    <div class="col-md-12 alert alert-warning alert-dismissible alert-customized">
+                        Estamos implantando la nueva vista de eventos en la App, en breve su App se actualizará.
+                    </div>
+                    <!--Pagination-->
+
+                    <div class="col-xs-12 col-md-12" id="barras">
+
+                        <div class="separator-2"></div>
+                        <br>
+                        <!-- Empiezan los Desplegables -->
+                        <!-- ================ -->
+                        <div class="panel-group panel-group-dinamic collapse-style-2" id="accordion-2">
+
+                            {% if events|length <= 0 %}
+                                <h4 class="text-center color-blue">No se han creado {{ fiesta }}s todavía. </h4>
+                            {% else %}
+                                <div class="holder"></div>
+                                <form role="form" action="/eventos/delete-massive/" name="formDeleteMassive" id="formDeleteMassive" method="post">
+                                {% for evento in events %}
+                                    <div class="row" id="row">
+                                        <div class="col-xs-1 col-sm-1  col-md-1 checks-events margin-left--2">
+                                            <input name="check[]" id="check[{{ evento.id }}]" data-toggle="checkbox-x" data-size="sm"  data-three-state="false"/>
+                                            <input name="id[]" type="hidden" value="{{ evento.id }}" />
+                                        </div>
+                                        <div class="col-xs-10 col-sm-11 col-md-11 panel-event padding-left-0">
+                                            <div class="panel panel-default  margin-top-bandos">
+                                                <div class="panel-headtitulo">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion-2"
+                                                           href="#{{ evento.id }}" data-id="{{ evento.id }}" class="collapsed">
+                                                            {% if  evento.active == 0 %}
+                                                                <del class="red-del">{{ evento.titulo }} </del><span class="pull-right margin-right-1">del {{ evento.fecha|date('d-m-Y') }} a las {{ evento.fecha|date('H:i') }}</span>
+                                                            {% elseif evento.done > 0 %}
+                                                                <del class="blue-del">{{ evento.titulo }} </del><span class="pull-right margin-right-1">del {{ evento.fecha|date('d-m-Y') }} a las {{ evento.fecha|date('H:i') }}</span>
+                                                            {% else %}
+                                                                {{ evento.titulo }} <span class="pull-right margin-right-1">del {{ evento.fecha|date('d-m-Y') }} a las {{ evento.fecha|date('H:i') }}</span>
+                                                            {% endif %}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="{{ evento.id }}" class="panel-collapse collapse">
+                                                    <div class="panel-body bordered p-15">
+                                                        <div id="anima1">
+                                                            <div class="img-margin">
+                                                                <div class="row">
+                                                                    <div class="col-md-5">
+                                                                        <div class="panel panel-info">
+                                                                            <div class="panel-heading">
+                                                                                <h3 class="panel-title">Foto Principal</h3>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                {#<img id="img" class="img-responsive"
+                                                                                     src="http://staticpanelfiestas.devecomputer.es/eventos/{{ evento.usuario }}/{{ evento.id }}/main{{ evento.id }}.{{ evento.mainType }}"
+                                                                                     alt="foto principal">#}
+                                                                                <img id="img" class="img-responsive"
+                                                                                     src="{{ path }}files/eventos/{{ evento.usuario }}/{{ evento.id }}/main{{ evento.id }}.{{ evento.mainType }}?t={{ date().timestamp }}"
+                                                                                     alt="foto principal">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3 col-md-offset-2">
+                                                                        <div class="panel panel-info">
+                                                                            <div class="panel-heading">
+                                                                                <h3 class="panel-title">Foto Miniatura</h3>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                {#<img id="img" class="img-responsive"
+                                                                                     src="http://staticpanelfiestas.devecomputer.es/eventos/{{ evento.usuario }}/{{ evento.id }}/mini{{ evento.id }}.{{ evento.miniType }}"
+                                                                                     alt="foto miniatura">#}
+                                                                                <img id="img" class="img-responsive"
+                                                                                     src="{{ path }}files/eventos/{{ evento.usuario }}/{{ evento.id }}/mini{{ evento.id }}.{{ evento.miniType }}?t={{ date().timestamp }}"
+                                                                                     alt="foto miniatura">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Título</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.titulo }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Descripción</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.descripcion }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">¿Pertenece al programa de
+                                                                                fiestas?</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">
+                                                                                {% if evento.programaFiestas == 1 %}
+                                                                                    Si.
+                                                                                {% else %}
+                                                                                    No.
+                                                                                {% endif %}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">¿Permite suscripciones?</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">
+                                                                                {% if evento.subscribe == 1 %}
+                                                                                    Si.
+                                                                                {% else %}
+                                                                                    No.
+                                                                                {% endif %}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Organización</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.organizacion }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Video</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            {% if evento.url is not null %}
+                                                                                {#<a target="_blank" href="{{ evento.url }}">{{ evento.url }}</a>#}
+                                                                                {{ evento.url }}
+                                                                            {% else %}
+                                                                                No hay video.
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Link para información extra</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            {% if evento.link is not null %}
+                                                                                <a readonly type="text" target="_blank" id="link" name="link" placeholder="Link de información extra" href="{{ evento.link }}">{{ evento.link }}</a></p>
+                                                                            {% else %}
+                                                                                No hay link.
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% if hasComarca %}
+                                                                        <div class="panel panel-info">
+                                                                            <div class="panel-heading">
+                                                                                <h3 class="panel-title">Pueblo</h3>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                <p class="">{{ evento.pueblo }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Fecha inicial</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.fecha|date('d-m-Y H:i') }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Fecha final</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">
+                                                                                {% if evento.fecha_final is not null %}
+                                                                                    {{ evento.fecha_final|date('d-m-Y H:i') }}
+                                                                                {% else %}
+                                                                                    Sin fecha final.
+                                                                                {% endif %}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Fecha de publicación</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">
+                                                                                {% if evento.fecha_publicacion is not null %}
+                                                                                    {{ evento.fecha_publicacion|date('d-m-Y H:i') }}
+                                                                                {% else %}
+                                                                                    Evento publicado en el momento de su creación.
+                                                                                {% endif %}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Categoría</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.category }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Lugar</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.lugar }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Latitud</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.latitud }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="panel panel-info">
+                                                                        <div class="panel-heading">
+                                                                            <h3 class="panel-title">Longitud</h3>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            <p class="">{{ evento.longitud }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% if capabilities.subscribe %}
+                                                                        <div class="panel panel-info">
+                                                                            <div class="panel-heading">
+                                                                                <h3 class="panel-title">Suscripciones</h3>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                {% if evento.subscribe == 1 %}
+                                                                                    {% for subscriber in evento.subscribers %}
+                                                                                        <p>Nombre: {{ subscriber.name }}<span class="margin-left-1">Email: {{ subscriber.email }}</span><span class="margin-left-1">Teléfono: {{ subscriber.phone }}</span></p>
+                                                                                    {% else %}
+                                                                                        Sin suscripciones.
+                                                                                    {% endfor %}
+                                                                                {% else %}
+                                                                                    <p class=""> No es un evento con suscripciones.</p>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    <div class="col-md-12 margin-top-1" >
+                                                                        <a id="eventoEdit{{ evento.id }}" href="/eventos/edit/{{ evento.id }}" class="form-button btn btn-lg btn-primary float-right  btn-margin-top margin-right-1">Editar</a>
+
+                                                                        <a class="color-eliminar " data-toggle="modal" data-target="#myModal{{ evento.id }}">Eliminar evento</a>
+                                                                        <div class="modal fade" id="myModal{{ evento.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                        <h4 class="modal-title" id="myModalLabel">Confirmación de borrado</h4>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <p>¿Está seguro de querer eliminar <strong>permanentemente</strong> este evento ?</p>
+                                                                                    </div>
+                                                                                    <div class="modal-footer ">
+                                                                                        <div class="align-eliminar col-md-6 col-xs-6">
+                                                                                            <a class="btn btn-danger " href="/eventos/delete/{{ evento.id }}/eventos">Eliminar</a>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 col-xs-6" >
+                                                                                            <button type="button" class="btn btn-default align-cancel" data-dismiss="modal">Cancelar</button>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {% if evento.active == 0 %}
+                                                                            <a id="eventoEdit{{ evento.id }}" href="/eventos/active/{{ evento.id }}" class="btn btn-warning btn-lg btn-margin-top" data-toggle="modal">Activar</a>
+                                                                            {#{% else %}#}
+                                                                            {#<a id="eventoEdit{{ evento.id }}" href="/eventos/deactive/{{ evento.id }}" class="btn btn-warning btn-lg btn-margin-top" data-toggle="modal">Desactivar</a>#}
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </form>
+                                <!--Pagination-->
+                                <div class="holder"></div>
+                            {% endif %}
+                        </div>
+                        <!-- Terminan los Desplegables -->
+
+                    </div>
+                </div>
+                <br>
+                <div class="pie"><a href="http://www.ecomputer.es" target="_blank"><img
+                                src="{{ path }}/images/ecomputer_logo.png" class="logo_ecomputer"/></a></div>
+            </div>
+        </div>
+        {{ headers.getScripts() }}
+        {{ mapa.getMapa(centro_latitud,centro_longitud,'#boton_masnuevo','#event_form','googleMap') }}
+    </div>
+</div>
+</div>
+
+</body>
+</html>
