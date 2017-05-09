@@ -31,6 +31,15 @@ Tablas
   id -> int autonumerico
   nombre -> VARCHAR
   rol -> VARCHAR (si va a pedir o si va a acceder)
+    Profesor
+      -Consultar el material de aula
+      -Alta averias
+    SAT
+      -Consultar material
+      -Modificar averias(solucion, fecha)
+    Encargado-Admin
+      -Alta tablas/Baja/Consultar
+      
 
   -- UBICACIONES --
   id -> int autonumerico
