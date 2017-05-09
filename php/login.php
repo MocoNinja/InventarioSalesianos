@@ -22,7 +22,6 @@ else
 			$_SESSION['nombre'] = $linea['nombre'];
 			$_SESSION['rol'] = $linea['rol'];
 			header("location:principal.php");
-			}
 		}
 		else
 		{
