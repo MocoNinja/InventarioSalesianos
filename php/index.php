@@ -12,22 +12,22 @@
     <form name="usuarios" id="usuarios" method="post" action="login.php">
       <table>
       <tr>
-        <td colspan="2"><img src="./BBDD/imagenes/logosz.jpg" width="500"></td>
+        <td colspan="2"><img src="./img/logosz.jpg"></td>
       </tr>
       <tr>
-        <td>Dni: </td>
-        <td><input type="text" name="dni" id="dni" placeholder="dni">
+        <td>Nombre de usuario: </td>
+        <td><input type="text" name="user" id="user" placeholder="user">
       </tr>
       <tr>
-        <td>Clave:</td>
-        <td><input type="password" name="clave" id="clave" placeholder="Clave"></td>
+        <td>Contraseña:</td>
+        <td><input type="password" name="password" id="password" placeholder="password"></td>
       </tr>
       <tr>
-        <td colspan="2" align="center">
-          <input type="submit" value="Entrar">
+        <td>
+          <input type="submit" value="Login">
         </td>
       </tr>
       </table>
-</form>
+    </form>
   </body>
 </html>
