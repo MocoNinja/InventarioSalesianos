@@ -1,0 +1,1 @@
+sudo cp -f *.php /opt/lampp/htdocs/inventario

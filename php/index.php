@@ -8,15 +8,20 @@
   <body>
     <?php
       include("conexion.php");
+      $estado = $_SESSION['fallo'];
+      if ($estado == "pass") $mensaje = "Contraseña incorrecta";
+      else if ($estado == "user") $mensaje = "Usuario no encontrado";
+      else $mensaje = "";
+      echo "<p>$mensaje</p>";
     ?>
     <form name="usuarios" id="usuarios" method="post" action="login.php">
       <table>
       <tr>
-        <td colspan="2"><img src="./img/logosz.jpg"></td>
+        <td colspan="2"><img src="./img/logosz.jpg" width="500" height= "350"></td>
       </tr>
       <tr>
         <td>Nombre de usuario: </td>
-        <td><input type="text" name="user" id="user" placeholder="user">
+        <td><input type="text" name="username" id="username" placeholder="user">
       </tr>
       <tr>
         <td>Contraseña:</td>
