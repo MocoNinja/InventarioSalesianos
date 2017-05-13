@@ -1,0 +1,1 @@
+copy /Y *.php C:\xampp\htdocs\inventario
