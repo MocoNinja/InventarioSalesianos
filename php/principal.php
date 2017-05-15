@@ -13,7 +13,8 @@
     $rol = $_SESSION['rol'];
     $username = $_SESSION['username'];
     echo "Bienvenido $nombre. Login: $username. Rol: $rol";
-    echo "<input type='button' value='Cerrar sesión actual' onclick='window.location.href='logout.php''/>";
+    $botonLogout = "<a href='logout.php'> <img width='50' src='./img/logout.png'></a>Cerrar sesión";
+    echo $botonLogout;
     echo "<br/>";
     switch ($rol)
     {
