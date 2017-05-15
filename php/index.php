@@ -17,7 +17,7 @@
     <form name="usuarios" id="usuarios" method="post" action="login.php">
       <table>
       <tr>
-        <td colspan="2"><img src="./img/logosz.jpg" width="500" height= "350"></td>
+        <td colspan="2"><img src="./img/logosz.jpg" width="50%"></td>
       </tr>
       <tr>
         <td>Nombre de usuario: </td>

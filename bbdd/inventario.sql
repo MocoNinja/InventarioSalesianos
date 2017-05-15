@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 09-05-2017 a las 09:32:56
+-- Tiempo de generación: 15-05-2017 a las 10:26:15
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 7.0.15
 
@@ -339,11 +339,6 @@ ALTER TABLE `Usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `Impresoras`
---
-ALTER TABLE `Impresoras`
-  MODIFY `idMaterial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
 -- AUTO_INCREMENT de la tabla `Incidencias`
 --
 ALTER TABLE `Incidencias`
@@ -358,11 +353,6 @@ ALTER TABLE `Marcas`
 --
 ALTER TABLE `Materiales`
   MODIFY `idMaterial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT de la tabla `Ordenadores`
---
-ALTER TABLE `Ordenadores`
-  MODIFY `idMaterial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `Proveedores`
 --
