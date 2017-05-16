@@ -6,23 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <form name="informe" id="informe" method="post" action="insusuarios.php">
-      <table align="center" width="50%">
+  <h2>Inserte su incidencia</h2>
+    <form name="informe" id="informe" method="post" action="insincidencia.php">
+      <table>
+      <tr><th>Material Afectado</th><th>Fecha de incidencia</th><th>Descripción de la incidencia</th></tr>
       <tr>
-        <td colspan="2"><img src="./imagenes/logosz.jpg" width="500"></td>
+        <td>
+        <?php
+        include("conexion.php");
+        $materialesDisponibles = "SELECT idMaterial, nombre FROM Materiales";
+        $registros = mysqli_query($conexion,$materialesDisponibles) or die("Error en la consulta de inserción $materialesDisponibles");
+        echo "<select name='materiales' id='materiales'>";
+        while($linea=mysqli_fetch_array($registros))
+        {
+          echo"<option value='$linea[idMaterial]'>$linea[nombre]";
+        }
+        echo "</select>";
+        mysqli_close($conexion);
+        ?>
+        </td>
+        <td>
+        <input type="date" name="fecha" value="fecha">
+        </td>
+        <td><input type="text" name="problema" value="problema"></td>
       </tr>
-      <tr><td colspan="2" align="center"><h2>USUARIOS</h2></td></tr>
-    <?php
-      include("conexion.php");
-      $materialesDisponibles = "SELECT idMaterial, nombre FROM Materiales";
-      $registros = mysqli_query($conexion,$materialesDisponibles) or die("Error en la consulta de inserción $materialesDisponibles");
-      echo "<select name='materiales' id='materiales'>";
-      while($linea=mysqli_fetch_array($registros))
-      {
-        echo"<option value='$linea[idMaterial]'>$linea[nombre]";
-      }
-      echo "</select>";
-      mysqli_close($conexion);?>
+      </table>
 
      </form>
  
