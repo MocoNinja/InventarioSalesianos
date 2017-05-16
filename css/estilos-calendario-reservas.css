@@ -1,0 +1,74 @@
+#custom-calendar-reservas>.datepicker-inline{
+    width: 100% !important;
+    border: 1px solid #ddd !important;
+    padding: 0px;
+}
+
+#custom-calendar-reservas>.datepicker-inline>.datepicker-days>.table-condensed{
+    width: 100% !important;
+}
+
+#custom-calendar-reservas table td.new,
+#custom-calendar-reservas table td.old,
+#custom-calendar-reservas table td.new:hover,
+#custom-calendar-reservas table td.old:hover {
+    color: #B1B1B1;
+}
+
+#custom-calendar-reservas table td.disabled,
+#custom-calendar-reservas table td.disabled:hover {
+    background: #EAEAEA !important;
+    cursor: not-allowed;
+}
+
+#custom-calendar-reservas table td.active, #custom-calendar-reservas table td.active:hover {
+    background: #E8E8E8;
+    box-shadow: inset 0px 0px 8px #AFAFAF;
+    text-shadow: none;
+    color: #777777;
+    background: rgb(255, 202, 7);
+}
+
+.datepicker-days table thead tr:nth-child(3) {
+    color: white;
+    background-color: #5c5c5c;
+    font-weight: normal;
+}
+
+.datepicker-days table thead tr:nth-child(3) th {
+    font-weight: 400 ;
+}
+
+#custom-calendar-reservas table * {
+    border-radius: 0 !important;
+}
+
+#custom-calendar-reservas table td {
+    padding: 10px !important;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    vertical-align: top;
+    text-align: center;
+    line-height: 18px;
+}
+
+#custom-calendar-reservas .next,
+#custom-calendar-reservas .prev {
+    position: relative;
+}
+#custom-calendar-reservas .next.disabled,
+#custom-calendar-reservas .prev.disabled {
+    background: #EFEFEF;
+    cursor: not-allowed;
+}
+
+#custom-calendar-reservas table th{
+    border-left: 1px solid #ddd;
+    padding: 10px !important;
+}
+
+
+
+
+
+
