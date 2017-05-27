@@ -58,8 +58,11 @@
 <BODY>
 	<?php
 	include("conexion.php");
+	if ($_SESSION['rol'] == "administrador" || $_SESSION['rol'] == "sat"){
+	    echo "<button id=\"nuevoMaterial\" class=\"btn1\" onclick=\"mostrarFormulario()\">+ Nuevo</button>";
+    }
 	?>
-	<button id="nuevoMaterial" class="btn1" onclick="mostrarFormulario()">+ Nuevo</button>
+	<!--<button id="nuevoMaterial" class="btn1" onclick="mostrarFormulario()">+ Nuevo</button> -->
 	<div id="formMateriales">
 		<form name="material" id="material" method="post" action="insMaterial.php">
 			<div class="col-md-9">

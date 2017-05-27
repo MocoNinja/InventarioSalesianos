@@ -24,6 +24,7 @@
   <img src="./img/add_usuario.png" alt="Meter usuario" id="add_usuario" width="50" onclick="meterUsuario()"> Insertar usuario <br/>
     <?php
       include("conexion.php");
+      if ($_SESSION['rol'] != "administrador") header("location:index.php");
       $usuarios = "SELECT * FROM Usuarios";
       $registros = mysqli_query($conexion,$usuarios) or die("Error en la consulta de inserción $usuarios");
     ?>
