@@ -14,7 +14,7 @@
     $rol = $_SESSION['rol'];
     $username = $_SESSION['username'];
     echo "Bienvenido $nombre. Login: $username. Rol: $rol";
-    $botonLogout = "<a href='logout.php'> <img width='50' src='./img/logout.png'></a>Cerrar sesión";
+    $botonLogout = "<a href='logout.php'> <img width='25' src='./img/logout.png'></a>Cerrar sesión";
     echo $botonLogout;
     echo "<br/>";
     switch ($rol)
@@ -33,7 +33,7 @@
         case 'profesor':
             $columna2 =  "<a href='materiales.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
             $columna3 = "<a href='incidencias.php'> <img width='150' src='./img/report_management.png'></a><br/>Gestionar incidencias";
-            echo "<table>00<tr><td>$columna2</td><td>$columna3</td></tr></table>";
+            echo "<table><tr><td>$columna2</td><td>$columna3</td></tr></table>";
             break;
 
     }
