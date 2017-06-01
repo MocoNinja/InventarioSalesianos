@@ -56,6 +56,7 @@
 							<!--AULA-->
 								<?php
 									include("conexion.php");
+									if (empty($_SESSION['rol'])) header("location:index.php"); // No listillos allowed
 								//creamos la consulta
 								$sql="SELECT ub.nombre as nom, ub.idUbicacion AS idUbi , ma.nombre as mat, ma.idMaterial as id FROM ubicaciones as ub, materiales as ma WHERE ub.idUbicacion=ma.idUbicacion group by ma.idUbicacion";
 

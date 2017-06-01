@@ -19,7 +19,7 @@
                         <hr />
                         <?php
                             include("conexion.php");
-                            if (empty($_SESSION['rol'])) header("location:index.php"); // No listillos allowed
+                            
                             $nombre = $_SESSION['nombre'];
                             $rol = $_SESSION['rol'];
                             $username = $_SESSION['username'];
@@ -32,18 +32,18 @@
                                 case 'administrador':
                                     $columna1 = "<a href='usuarios.php'> <img width='150' src='./img/user_management.png'></a><br/>Gestionar usuarios";
                                     $columna2 =  "<a href='materiales.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
-                                    $columna3 =  "<a href='Desglose.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
+                                    $columna3 =  "<a href='Desplegables.php'> <img width='150' src='./img/materials_view.png'></a><br/>Ver materiales";
                                     $columna4 = "<a href='incidencias.php'> <img width='150' src='./img/report_management.png'></a><br/>Gestionar incidencias";
                                     echo "<table><tr><td>$columna1</td><td>$columna2</td><td>$columna3</td><td>$columna4</td></tr></table>";
                                     break;
                                 case 'sat':
                                     $columna2 =  "<a href='materiales.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
-                                 	$columna3 =  "<a href='Desglose.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
+                                 	$columna3 =  "<a href='Desplegables.php'> <img width='150' src='./img/materials_view.png'></a><br/>Ver materiales";
                                     $columna4 = "<a href='incidencias.php'> <img width='150' src='./img/report_management.png'></a><br/>Gestionar incidencias";
                                     echo "<table><tr><td>$columna2</td><td>$columna3</td><td>$columna4</td></tr></table>";
                                     break;
                                 case 'profesor':
-                                    $columna2 =  "<a href='Desglose.php'> <img width='150' src='./img/materials_management.png'></a><br/>Gestionar materiales";
+                                    $columna2 =  "<a href='Desplegables.php'> <img width='150' src='./img/materials_view.png'></a><br/>Ver materiales";
                                     $columna3 = "<a href='incidencias.php'> <img width='150' src='./img/report_management.png'></a><br/>Gestionar incidencias";
                                     echo "<table><tr><td>$columna2</td><td>$columna3</td></tr></table>";
                                     break;
