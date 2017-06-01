@@ -57,8 +57,10 @@
 	</script>
 </HEAD>
 <body>
+<div id="volverInicio"><a href="principal.php">Volver</a></div>
 							<?php
 	include("conexion.php");
+	if (empty($_SESSION['rol'])) header("location:index.php");
 	?>
 	<button id="nuevoMaterial" class="btn1" onclick="mostrarFormulario()">+ Nuevo</button>
 	<div id="formMateriales">
@@ -170,10 +172,12 @@
 			<div>
 				<div >Tipo Material</div>
 				<div>
+				<center>
 					<input type="radio" name="tipoMaterial" id="ninguna" value="ninguna" checked><p onclick="formTipoNinguno()"> Ninguna</p>
-					<input type="radio" name="tipoMaterial" id="ordenador" value="ordenador"><img class="tipoMaterial"  onclick="formOrdenadorShow()" src="../img/ordenador.png">
-					<input type="radio" name="tipoMaterial" id="impresora" value="impresora"><img class="tipoMaterial" onclick="formImpresoraShow()" src="../img/impresora.png">
-					<input type="radio" name="tipoMaterial" id="monitor" value="monitor"> <img class="tipoMaterial" onclick="formMonitorShow()" src="../img/monitor.png">
+					<input type="radio" name="tipoMaterial" id="ordenador" value="ordenador"><img class="tipoMaterial" width="150" height="150"  onclick="formOrdenadorShow()" src="./img/ordenador.png">
+					<input type="radio" name="tipoMaterial" id="impresora" value="impresora"><img class="tipoMaterial" width="150" height="150" onclick="formImpresoraShow()" src="./img/impresora.png">
+					<input type="radio" name="tipoMaterial" id="monitor" value="monitor"> <img class="tipoMaterial" width="150" height="150" onclick="formMonitorShow()" src="./img/monitor.png">
+					</center>
 				</div>
 			</div><br>
 			<div id="formOrdenador">
@@ -236,6 +240,7 @@
 			</div>
 		</div>
 		</form>
+
 	</div>
 
 	</body>

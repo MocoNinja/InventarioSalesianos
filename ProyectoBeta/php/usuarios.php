@@ -36,7 +36,7 @@
     </script>
   </head>
   <body class="is-loading">
-
+<div id="volverInicio"><a href="principal.php">Volver</a></div>
     <!-- Wrapper -->
       <div id="wrapper">
 
@@ -113,8 +113,9 @@
                   ?>
                   </table>
                 </div>
+                <!-- movido por coherencia con otras paginas
                 <div id="volverInicio"><a href="principal.php">Volver</a></div>
-            
+              -->
             <footer>
               <ul class="icons">
               </ul>

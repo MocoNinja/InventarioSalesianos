@@ -6,23 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="import" href="headers.html">
     <script language="javascript">
+      // function meterIncidencia()
+      // {
+      //   // console.log(document.getElementById('insertarIncidencias').style.opacity);
+      //   if (document.getElementById('insertarIncidencias').style.opacity == 0)
+      //   {
+      //     document.getElementById('verIncidencias').style.opacity = "0.1";
+      //     document.getElementById('insertarIncidencias').style.opacity = "1";
+      //     // document.getElementById('insertarIncidencias').style.zIndex = "1";
+      //   } else {
+      //     document.getElementById('verIncidencias').style.opacity = "1";
+      //     document.getElementById('insertarIncidencias').style.opacity = "0";
+      //   }
+      // }
+
+      function ocultar(){
+        document.getElementById('insertarIncidencias').style.display = "none";
+      }
       function meterIncidencia()
       {
         // console.log(document.getElementById('insertarIncidencias').style.opacity);
-        if (document.getElementById('insertarIncidencias').style.opacity == 0)
+        if (document.getElementById('insertarIncidencias').style.display == "none")
         {
-          document.getElementById('verIncidencias').style.opacity = "0.1";
-          document.getElementById('insertarIncidencias').style.opacity = "1";
+          document.getElementById('verIncidencias').style.display = "none";
+          document.getElementById('insertarIncidencias').style.display = "block";
           // document.getElementById('insertarIncidencias').style.zIndex = "1";
         } else {
-          document.getElementById('verIncidencias').style.opacity = "1";
-          document.getElementById('insertarIncidencias').style.opacity = "0";
+          document.getElementById('verIncidencias').style.display = "block";
+          document.getElementById('insertarIncidencias').style.display = "none";
         }
       }
     </script>
   </head>
-<body class="is-loading">
-
+<body class="is-loading" onload="ocultar()">
+<div id="volverInicio"><a href="principal.php">Volver</a></div>
     <!-- Wrapper -->
       <div id="wrapper">
 
@@ -35,29 +52,47 @@
               <img src="./img/report_management.png" alt="Meter usuario" id="add_report" width="50" onclick="meterIncidencia()"> Insertar incidencia <br/>
               <?php
                 include("conexion.php");
+                if (empty($_SESSION['rol'])) header("location:index.php");
                 $incidencias = "SELECT * FROM Incidencias";
                 $registros = mysqli_query($conexion,$incidencias) or die("Error en la consulta de inserción $incidencias");
               ?>
-              <div id="insertarIncidencias" style="opacity:0;">
+              <div id="insertarIncidencias">
                <form name="usuario" id="usuario" method="post" action="insertarIncidencia.php">
                 <table>
+                <tr>
+                <td>Material</td>
+                <td>
+                <select name="idMaterial">
+                  <?php
+                  $sqlMateriales = "SELECT * FROM Materiales";
+                  $materialesRecuperados = mysqli_query($conexion,$sqlMateriales) or die("Error en la consulta de inserción $sqlMateriales");
+                  while($linea=mysqli_fetch_array($materialesRecuperados)){
+                      $material = $linea['nombre'];
+                      $idMaterial = $linea['idMaterial'];
+                      $opcion = "<option value='".$idMaterial."'>".$material."</option>";
+                      echo $opcion;
+                    }
+                  ?>
+                </select>
+                </td>
+                </tr>
                   <tr>
                     <td>Nombre Incidencia</td>
-                    <td><input type="text" name="incidencia" id="incidencia"></td>
+                    <td><input type="text" name="incidencia" id="incidencia" required></td>
                   </tr>
                   <tr>
                     <td>Fecha Incidencia</td>
-                    <td><input type="date" name="fechaIncidencia" id="fechaIncidencia"></td>
+                    <td><input type="date" name="fechaIncidencia" id="fechaIncidencia" required></td>
                   </tr>
                   <?php
                     if ($_SESSION['rol'] != "profesor"){
                       echo '        <tr>
                     <td>Solución Incidencia</td>
-                    <td><input type="text" name="solucion" id="solucion"></td>
+                    <td><input type="text" name="solucion" id="solucion" required></td>
                   </tr>
                   <tr>
                     <td>Fecha Solucion</td>
-                    <td><input type="date" name="fechaSolucion" id="fechaSolucion"></td>
+                    <td><input type="date" name="fechaSolucion" id="fechaSolucion" required></td>
                   </tr>';
                     }
                   ?>
@@ -83,7 +118,8 @@
                 <?php
                   while($linea=mysqli_fetch_array($registros))
                   {
-                    $botonBorrar = "<img src='./img/report_kill.png' onclick='borrarUsuario()' width='25'>";
+                    //$botonBorrar = "<img src='./img/report_kill.png' onclick='borrarUsuario()' width='25'>";
+                    $botonBorrar =  "<td><a href='borrarIncidencia.php?clave=$linea[idIncidencia]'><img src='./img/report_kill.png' width='30'></a></td>";
                     $incidencia = $linea['incidencia'];
                     $fechaIncidencia = $linea['fechaIncidencia'];
                     if ($_SESSION['rol'] != "profesor"){
@@ -97,8 +133,7 @@
                   }
                    echo " <td>$botonBorrar</td></tr>";
                   ?>
-                    
-                  }
+                  
                   <?php
                   mysqli_close($conexion);
                 ?>
@@ -107,6 +142,7 @@
             
             <footer>
               <ul class="icons">
+
               </ul>
             </footer>
           </section>
